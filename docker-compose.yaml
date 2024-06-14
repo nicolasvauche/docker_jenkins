@@ -16,15 +16,18 @@ services:
       - jenkins-net
     environment:
       - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+    depends_on:
+      - mariadb
     restart: always
 
   mariadb:
     image: mariadb:latest
+    container_name: mariadb-1
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: sf_testing
     ports:
-      - "3306:3306"
+      - "8306:3306"
     volumes:
       - mariadb-data:/var/lib/mysql
     networks:
