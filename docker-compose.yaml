@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  jenkins:
+    build: .
+    privileged: true
+    user: root
+    ports:
+      - 7070:8080
+      - 50000:50000
+    container_name: jenkins
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - jenkins-net
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+    restart: always
+
+  mariadb:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sf_testing
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - jenkins-net
+
+volumes:
+  jenkins-data:
+  mariadb-data:
+
+networks:
+  jenkins-net:
